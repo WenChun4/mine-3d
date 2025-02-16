@@ -21,10 +21,10 @@ type RecordWindowProps = {
 
   const RankingTable = ({ datas }: { datas: GameRecord[] }) => (
     <Table
-      style={{ minWidth: 400 }}
       columns={[
-        { id: 'rank', Header: 'Rank', accessor: 'rank', Cell: RankCell },
-        { Header: 'Time (sec)', accessor: 'time' },
+        { id: 'rank', Header: 'Rank', accessor: 'rank', Cell: RankCell, width: 70 },
+        { Header: 'User', accessor: 'name', width: 200 },
+        { Header: 'Time (sec)', accessor: 'time', width: 100 },
       ]}
       data={datas}
       emptyTableContent="No records."
@@ -53,29 +53,33 @@ type RecordWindowProps = {
 
 export default function RecordWindow({ show, difficulty, setShow }: RecordWindowProps) {
 
-    const recordsData: GameRecord[] = RecordApi.loadRecords(difficulty);
+  const [recordsData, setRecordsData] = React.useState<GameRecord[]>([]);
 
-return (
-        <>
-        <Dialog
-            isOpen={show}
-            onClose={() => setShow(false)}
-            setFocus={false}
-            closeOnEsc
-            isDismissible
-            portal
-        >
-            <Dialog.Backdrop />
-            <Dialog.Main>
-                <Dialog.TitleBar titleText={`Game Records (${difficulty})`} />
-                <Dialog.Content>
-                    <RankingTable datas={recordsData} />
-                </Dialog.Content>
-                <Dialog.ButtonBar>
-                    <Button styleType='high-visibility' onClick={() => setShow(false)}>Close</Button>
-                </Dialog.ButtonBar>
-            </Dialog.Main>
-        </Dialog>
-        </>
-    );
+  RecordApi.loadRecords(difficulty).then((rds: GameRecord[]) => {
+    setRecordsData(rds);
+  });
+
+  return (
+    <>
+    <Dialog
+        isOpen={show}
+        onClose={() => setShow(false)}
+        setFocus={false}
+        closeOnEsc
+        isDismissible
+        portal
+    >
+        <Dialog.Backdrop />
+        <Dialog.Main>
+            <Dialog.TitleBar titleText={`High Records (${difficulty})`} />
+            <Dialog.Content>
+                <RankingTable datas={recordsData} />
+            </Dialog.Content>
+            <Dialog.ButtonBar>
+                <Button styleType='high-visibility' onClick={() => setShow(false)}>Close</Button>
+            </Dialog.ButtonBar>
+        </Dialog.Main>
+    </Dialog>
+    </>
+);
 }

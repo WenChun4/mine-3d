@@ -223,13 +223,13 @@ export default class Geometry3dApi {
         numberLines.push(this.lcd_BlockD());
         break;
       case 9:
-          numberLines.push(this.lcd_BlockF());
-          numberLines.push(this.lcd_BlockG());
-          numberLines.push(this.lcd_BlockE());
-          numberLines.push(this.lcd_BlockD());
-          numberLines.push(this.lcd_BlockC());
-          numberLines.push(this.lcd_BlockA());
-          break;        
+        numberLines.push(this.lcd_BlockF());
+        numberLines.push(this.lcd_BlockG());
+        numberLines.push(this.lcd_BlockE());
+        numberLines.push(this.lcd_BlockD());
+        numberLines.push(this.lcd_BlockC());
+        numberLines.push(this.lcd_BlockA());
+        break;        
       default:
         break;
     }
@@ -237,6 +237,13 @@ export default class Geometry3dApi {
     return numberLines;
   }
 
+  /*
+      ......
+      .    .
+      ......
+      .    .
+      ______
+  */
   private static lcd_BlockA(): LineString3d {
     let pt0: Point3d = new Point3d(7, 0, 0);
     let pt1: Point3d = new Point3d(72, 68, 0);
@@ -247,6 +254,13 @@ export default class Geometry3dApi {
     return numberLines;
   }
 
+    /*
+      ......
+      .    .
+      ......
+      |    .
+      ......
+  */
   private static lcd_BlockB(): LineString3d {
     let pt0: Point3d = new Point3d(0, 6, 0);
     let pt1: Point3d = new Point3d(0, 274, 0);
@@ -258,6 +272,13 @@ export default class Geometry3dApi {
     return numberLines;
   }
 
+  /*
+      ......
+      .    .
+      ......
+      .    |
+      ......
+  */
   private static lcd_BlockC(): LineString3d {
     let pt0: Point3d = new Point3d(296, 78, 0);
     let pt1: Point3d = new Point3d(296, 268, 0);
@@ -269,6 +290,13 @@ export default class Geometry3dApi {
     return numberLines;
   }
 
+    /*
+      ......
+      .    .
+      ______
+      .    .
+      ......
+  */
   private static lcd_BlockD(): LineString3d {
     let pt0: Point3d = new Point3d(38, 310, 0);
     let pt1: Point3d = new Point3d(76, 346, 0);
@@ -281,6 +309,13 @@ export default class Geometry3dApi {
     return numberLines;
   } 
 
+      /*
+      ......
+      |    .
+      ......
+      .    .
+      ......
+  */
   private static lcd_BlockE(): LineString3d {
     let pt0: Point3d = new Point3d(0, 613, 0);
     let pt1: Point3d = new Point3d(70, 546, 0);
@@ -292,6 +327,13 @@ export default class Geometry3dApi {
     return numberLines;
   }
 
+      /*
+      ......
+      .    |
+      ......
+      .    .
+      ......
+  */  
   private static lcd_BlockF(): LineString3d {
     let pt0: Point3d = new Point3d(296, 352, 0);
     let pt1: Point3d = new Point3d(296, 546, 0);
@@ -303,6 +345,13 @@ export default class Geometry3dApi {
     return numberLines;
   }
 
+      /*
+      ______
+      .    .
+      ......
+      .    .
+      ......
+  */
   private static lcd_BlockG(): LineString3d {
     let pt0: Point3d = new Point3d(5, 620, 0);
     let pt1: Point3d = new Point3d(361, 620, 0);

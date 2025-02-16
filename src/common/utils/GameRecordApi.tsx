@@ -6,43 +6,66 @@
 export interface GameRecord {
     [key:string]: string;
     rank: string;
+    name: string;
     time: string;
   }
 
 export default class GameRecordApi {
-    private static maxRecords:number = 4;
+    private static maxRecords:number = 8;
 
   private static keyName(difficulty: string): string{
     return `mine3d_${difficulty}`;
   };
 
-  public static saveRecord(difficulty: string, time: number) {
-    let recordsData: GameRecord[] = this.loadRecords(difficulty);
-    const newRecord: GameRecord = {
-        rank: "0",
-        time: time.toString(),
-    };
+  public static async saveRecord(difficulty: string, user: string, time: number) {
+    this.loadRecords(difficulty).then((recordsData: GameRecord[]) => {;
+      const newRecord: GameRecord = {
+          rank: "0",
+          name: user,
+          time: time.toString(),
+      };
 
-    if(recordsData === undefined || recordsData.length === 0){
-        recordsData = [];
-        recordsData.push(newRecord);
-    }
-    else{
-        recordsData.push(newRecord);
-        recordsData.sort((a: GameRecord, b: GameRecord) => {return (Number(a.time) - Number(b.time))});
-        recordsData.forEach((val, index) => {
-            val.rank = (index + 1).toString();
-        });
+      if(recordsData === undefined || recordsData.length === 0){
+          recordsData = [];
+          recordsData.push(newRecord);
+      }
+      else{
+          recordsData.push(newRecord);
+          recordsData.sort((a: GameRecord, b: GameRecord) => {return (Number(a.time) - Number(b.time))});
+          recordsData.forEach((val, index) => {
+              val.rank = (index + 1).toString();
+          });
 
-        if(recordsData.length > this.maxRecords)
-            recordsData.pop();
+          if(recordsData.length > this.maxRecords)
+              recordsData.pop();
 
-    }
+      }
 
-    localStorage.setItem(this.keyName(difficulty), JSON.stringify(recordsData));
+      /*
+      localStorage.setItem(this.keyName(difficulty), JSON.stringify(recordsData));
+      */
+      fetch(`http://localhost:3000/api/data?difficulty=${difficulty}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(recordsData, null, 2)
+      })
+        .then(res => res.json())
+        .then(data => console.log(data));
+    });
   }
 
-  public static loadRecords(difficulty: string): GameRecord[] {
+      /*
+    const recordsData: GameRecord[] = [
+        { rank: '1', name: 'WenChun', time: '5' },
+        { rank: '2', name: 'WenChun', time: '10' },
+        { rank: '3', name: 'WenChun', time: '12' },
+        { rank: '4', name: 'WenChun', time: '18' },
+      ];
+    */
+
+    public static loadRecords(difficulty: string): Promise<GameRecord[]> {
+
+   /*
     const keyName = this.keyName(difficulty);
     let recordsStr = localStorage.getItem(keyName);
     if(recordsStr === undefined || recordsStr === null || recordsStr === ''){
@@ -50,19 +73,19 @@ export default class GameRecordApi {
     }
 
     let records: GameRecord[] = JSON.parse(recordsStr as string);
-
-    records.sort((a: GameRecord, b: GameRecord) => {return (Number(a.time) - Number(b.time))});
-    records.forEach((val, index) => {
-        val.rank = (index + 1).toString();
-    });
-    return records;
-    /*
-    const recordsData: GameRecord[] = [
-        { rank: '1', time: '5' },
-        { rank: '2', time: '10' },
-        { rank: '3', time: '12' },
-        { rank: '4', time: '18' },
-      ];
     */
+    return fetch(`http://localhost:3000/api/data?difficulty=${difficulty}`)
+        .then(res => res.json())
+        .then((records: GameRecord[]) => {
+            records.sort((a: GameRecord, b: GameRecord) => Number(a.time) - Number(b.time));
+            records.forEach((val, index) => {
+                val.rank = (index + 1).toString();
+            });
+            return records;
+        })
+        .catch(error => {
+            console.error('Error loading records:', error);
+            return [];
+        });
   }
 }

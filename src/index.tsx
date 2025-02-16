@@ -9,7 +9,7 @@ const container = document.getElementById('root')!;
 const root = createRoot(container);
 root.render(
     <StrictMode>
-      <ThemeProvider style={{height: '100dvh'}}>
+      <ThemeProvider style={{height: '100vh'}}>
         <App />
       </ThemeProvider>
     </StrictMode>

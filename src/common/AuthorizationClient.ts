@@ -6,9 +6,10 @@ import {
   BrowserAuthorizationClient,
   BrowserAuthorizationClientConfiguration
 } from "@itwin/browser-authorization";
+import { createContext } from "react";
 
 // This is a thin wrapper class on BrowserAuthorizationClient to validate OIDC configuration
-class SandboxAuthorizationClient extends BrowserAuthorizationClient {
+class AuthorizationClient extends BrowserAuthorizationClient {
 
   constructor(configuration: BrowserAuthorizationClientConfiguration) {
     console.log(configuration);
@@ -39,13 +40,34 @@ class SandboxAuthorizationClient extends BrowserAuthorizationClient {
       .then(async () => super.signIn())
       .catch((error) => console.error(error));
   }
+
+  public async getUserFullName():Promise<string> {
+    if(super.isAuthorized == false) {
+      return "Unknown User";
+    }
+    
+    const userInfo = await this.getAccessToken();
+    const decodedToken = parseJwt(userInfo);
+    return `${decodedToken?.given_name} ${decodedToken?.family_name}`;
+  }
+}
+
+function parseJwt(token: string) {
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(atob(base64));
+  } catch (error) {
+    console.error("Failed to parse JWT Token", error);
+    return null;
+  }
 }
 
 // Authorization Client configuration values are provided by the Sandbox runtime
 // If this Sandbox is exported, configuration must be provided in
 // the .env file of the project. Please visit developer.bentley.com to
 // register Application and get Authorization Client details
-export const authClient = new SandboxAuthorizationClient({
+const authClient = new AuthorizationClient({
   scope: process.env.REACT_APP_IMJS_AUTH_CLIENT_SCOPES || "",
   clientId: process.env.REACT_APP_IMJS_AUTH_CLIENT_CLIENT_ID || "",
   redirectUri: process.env.REACT_APP_IMJS_AUTH_CLIENT_REDIRECT_URI || "",
@@ -53,3 +75,5 @@ export const authClient = new SandboxAuthorizationClient({
   responseType: "code",
   authority: process.env.REACT_APP_IMJS_AUTH_AUTHORITY,
 });
+
+export const authContext = createContext(authClient);

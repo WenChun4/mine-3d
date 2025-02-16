@@ -2,13 +2,15 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { UiFramework } from "@itwin/appui-react";
 import { Cartographic, ColorDef, RenderMode } from "@itwin/core-common";
 import { Range3d, Vector3d } from "@itwin/core-geometry";
 import { BlankConnectionViewState, Viewer, ViewerNavigationToolsProvider } from "@itwin/web-viewer-react";
-import { authClient } from "./common/AuthorizationClient";
+//import { authClient } from "./common/AuthorizationClient";
 import { Mine3dWidgetProvider } from "./Mine3dWidget";
+import "./Mine3d.scss";
+import { authContext } from "./common/AuthorizationClient";
 
 console.log("before uiProviders...");
 const uiProviders = [
@@ -39,16 +41,17 @@ const viewState: BlankConnectionViewState = {
 };
 
 const Mine3dApp = () => {
+  const auth = useContext(authContext);
 
   /** Sign-in */
   useEffect(() => {
-    void authClient.signIn();
+    void auth.signIn();
   }, []);
 
   /** The sample's render method */
   return <Viewer
     iTwinId="none"
-    authClient={authClient}
+    authClient={auth}
     location={Cartographic.createZero()}
     extents={new Range3d(-50, -50, -50, 50, 50, 50)}
     blankConnectionViewState={viewState}

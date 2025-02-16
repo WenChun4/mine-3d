@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { StagePanelLocation, StagePanelSection, UiItemsProvider, useActiveViewport, Widget, WidgetState } from "@itwin/appui-react";
 import { ColorByName, ColorDef, TextStringProps } from "@itwin/core-common";
 import { IModelApp } from "@itwin/core-frontend";
@@ -23,6 +23,7 @@ import RecordWindow from "./RecordWindow";
 import RecordApi from "./common/utils/GameRecordApi";
 import { FireDecorator, FireParams } from "./common/utils/FireDecorator";
 import FireDecorationApi from "./common/utils/FireDecorationApi";
+import { authContext } from "./common/AuthorizationClient";
 
 
 enum GameStatus {
@@ -57,7 +58,8 @@ export default function Mine3dWidget() {
   const gameStatusRef = useRef(gameStatus);
 
   const toaster = useToaster();
-
+  const auth = useContext(authContext);
+  
   useEffect(() => {
     mineBoxesRef.current = mineBoxes;
     gameStatusRef.current = gameStatus;
@@ -68,14 +70,14 @@ export default function Mine3dWidget() {
       const decorator = new GeometryDecorator(handleClick);
       IModelApp.viewManager.addDecorator(decorator);
       setGeoDecorator(decorator);
-      console.log("Geometry Decorator created.");
+      console.log("Geometry decorator created.");
     }
 
     return (() => {
       if (geoDecorator){
         IModelApp.viewManager.dropDecorator(geoDecorator);
         setGeoDecorator(undefined);
-        console.log("Geometry Decorator released.");
+        console.log("Geometry decorator released.");
       }      
     });
   }, [geoDecorator]);
@@ -88,7 +90,7 @@ export default function Mine3dWidget() {
         const decorator = new FireDecorator(params, activeViewport);
         IModelApp.viewManager.addDecorator(decorator);
         setFireDecorator(decorator);
-        console.log("FireDecorator created.");
+        console.log("Fire decorator created.");
       }
     }
 
@@ -96,8 +98,8 @@ export default function Mine3dWidget() {
       if (fireDecorator){
         IModelApp.viewManager.dropDecorator(fireDecorator);
         setFireDecorator(undefined);
-        console.log("Fire Decorator released.");
-      }      
+        console.log("Fire decorator released.");
+      }
     });
   }, [fireDecorator, activeViewport]);  
 
@@ -122,7 +124,10 @@ export default function Mine3dWidget() {
     }
 
     if (gameStatus === GameStatus.Success) {
-      RecordApi.saveRecord(GameDifficulty[gameDifficulty], seconds);
+      auth.getUserFullName().then((user) => {
+        RecordApi.saveRecord(GameDifficulty[gameDifficulty], user, seconds);
+      });
+
       setTimeout(() => {
         toaster.positive(`You found all mines, you spent ${seconds} seconds, congratulations.`, {
           hasCloseButton: true,

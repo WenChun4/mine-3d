@@ -14,6 +14,6 @@ The map is divided into many boxes, with mines randomly distributed. To win, you
 The purpose of this sample is to demonstrate the following:
 
 * Create 3d primitives including 3d Box and RuledSweep.
-* How to achieve interaction.
+* Geometry interaction.
 * How to use 3d transform.
-* Using some iTwin UI components.
+* Using iTwin UI components.
