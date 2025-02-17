@@ -14,10 +14,10 @@ RUN npm install
 COPY . .
 
 # Build React project
-RUN npm run build
+RUN npm run build:onrender
 
 # Expose the port
-EXPOSE 3000
+EXPOSE 433
 
 # Start Express server
 CMD ["node", "server.js"]

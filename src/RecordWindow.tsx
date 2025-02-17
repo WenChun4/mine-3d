@@ -3,14 +3,13 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Dialog, Table } from "@itwin/itwinui-react";
 import { SvgOtherMedal } from "./common/imgs/SvgOtherMedal";
 import { SvgSilverMedal } from "./common/imgs/SvgSilverMedal";
 import { SvgGoldMedal } from "./common/imgs/SvgGoldMedal";
 import { SvgBronzeMedal } from "./common/imgs/SvgBronzeMedal";
 import RecordApi, { GameRecord } from "./common/utils/GameRecordApi";
-import { SvgGoldMedal2 } from "./common/imgs/SvgGoldMedal2";
 
 
 type RecordWindowProps = {
@@ -35,7 +34,7 @@ type RecordWindowProps = {
   const renderRankIcon = (rank: string) => {
     switch (rank) {
       case '1':
-        return <SvgGoldMedal2 size = {26} />;
+        return <SvgGoldMedal size = {26} />;
       case '2':
         return <SvgSilverMedal size = {26}/>;
       case '3':
@@ -55,9 +54,11 @@ export default function RecordWindow({ show, difficulty, setShow }: RecordWindow
 
   const [recordsData, setRecordsData] = React.useState<GameRecord[]>([]);
 
-  RecordApi.loadRecords(difficulty).then((rds: GameRecord[]) => {
-    setRecordsData(rds);
-  });
+  useEffect(() => {
+    RecordApi.loadRecords(difficulty).then((rds: GameRecord[]) => {
+      setRecordsData(rds);
+    });
+  }, []);
 
   return (
     <>
@@ -81,5 +82,5 @@ export default function RecordWindow({ show, difficulty, setShow }: RecordWindow
         </Dialog.Main>
     </Dialog>
     </>
-);
+  );
 }

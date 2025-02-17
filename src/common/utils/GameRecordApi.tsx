@@ -44,7 +44,7 @@ export default class GameRecordApi {
       /*
       localStorage.setItem(this.keyName(difficulty), JSON.stringify(recordsData));
       */
-      fetch(`http://localhost:3000/api/data?difficulty=${difficulty}`, {
+      fetch(`${process.env.REACT_APP_IMJS_AUTH_CLIENT_URI}api/data?difficulty=${difficulty}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(recordsData, null, 2)
@@ -74,7 +74,7 @@ export default class GameRecordApi {
 
     let records: GameRecord[] = JSON.parse(recordsStr as string);
     */
-    return fetch(`http://localhost:3000/api/data?difficulty=${difficulty}`)
+    return fetch(`${process.env.REACT_APP_IMJS_AUTH_CLIENT_URI}api/data?difficulty=${difficulty}`)
         .then(res => res.json())
         .then((records: GameRecord[]) => {
             records.sort((a: GameRecord, b: GameRecord) => Number(a.time) - Number(b.time));

@@ -70,7 +70,7 @@
     "start": "react-scripts --max_old_space_size=4096 start",
     "build": "react-scripts --max_old_space_size=4096 build",
     "build:local": "env-cmd -f .env react-scripts --max_old_space_size=4096 build",
-    "build:back4app": "env-cmd -f .env.back4app react-scripts --max_old_space_size=4096 build",
+    "build:onrender": "env-cmd -f .env.onrender react-scripts --max_old_space_size=4096 build",
     "test": "react-scripts --max_old_space_size=4096 test",
     "eject": "react-scripts eject"
   },
