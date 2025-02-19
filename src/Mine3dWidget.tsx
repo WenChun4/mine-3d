@@ -7,7 +7,7 @@ import { StagePanelLocation, StagePanelSection, UiItemsProvider, useActiveViewpo
 import { ColorByName, ColorDef, TextStringProps } from "@itwin/core-common";
 import { IModelApp } from "@itwin/core-frontend";
 import { LineString3d, Loop, Point3d, PolyfaceBuilder, StrokeOptions, Transform, YawPitchRollAngles } from "@itwin/core-geometry";
-import { Badge, Divider, IconButton, MenuItem, SplitButton, useToaster } from "@itwin/itwinui-react";
+import { Badge, Divider, IconButton, MenuItem, SplitButton, Tooltip, useToaster } from "@itwin/itwinui-react";
 import { GeometryDecorator } from "./common/utils/GeometryDecorator";
 import Geometry3dApi from "./common/utils/Geometry3dApi";
 import "./Mine3d.scss";
@@ -24,6 +24,8 @@ import RecordApi from "./common/utils/GameRecordApi";
 import { FireDecorator, FireParams } from "./common/utils/FireDecorator";
 import FireDecorationApi from "./common/utils/FireDecorationApi";
 import { authContext } from "./common/AuthorizationClient";
+import HelpWindow from "./HelpWindow";
+import { SvgInfo } from '@itwin/itwinui-icons-react';
 
 
 enum GameStatus {
@@ -44,6 +46,7 @@ export default function Mine3dWidget() {
   const activeViewport = useActiveViewport();
   const [gameDifficulty, setGameDifficulty] = useState<GameDifficulty>(GameDifficulty.Easy);
   const [showRecord, setShowRecord] = useState<boolean>(false);
+  const [showHelp, setShowHelp] = useState<boolean>(false);
   const [gameStatus, SetGameStatus] = useState<GameStatus>(GameStatus.NotStarted);
   const [timerId, SetTimerId] = useState<any>(null);
   const [remainsMine, setRemainsMine] = useState<number>(0);
@@ -129,6 +132,7 @@ export default function Mine3dWidget() {
       });
 
       setTimeout(() => {
+        toaster.setSettings({ placement: 'top' });
         toaster.positive(`You found all mines, you spent ${seconds} seconds, congratulations.`, {
           hasCloseButton: true,
           duration: 5000,
@@ -136,6 +140,7 @@ export default function Mine3dWidget() {
       }, 300);
     } else if (gameStatus === GameStatus.Failure) {
       setTimeout(() => {
+        toaster.setSettings({ placement: 'top' });
         toaster.negative('You stepped on a mine, you failed!', {
           hasCloseButton: true,
           duration: 3000,
@@ -497,21 +502,31 @@ export default function Mine3dWidget() {
     <div className="sample-options">
       <div className="container">
         <div className="left-controls">
-          <Badge backgroundColor='positive'>{`${remainsMine}`}</Badge>
+          <Tooltip content='Remaining mines'>
+            <Badge backgroundColor='positive'>{`${remainsMine}`}</Badge>
+          </Tooltip>
           <IconButton onClick={() => {SetGameStatus(GameStatus.Restart);}} label={buttonLabel()} size='small'>
             {buttonIcon()}
           </IconButton>
-          <Badge backgroundColor='informational'>{`${seconds}`}</Badge>
+          <Tooltip content='Elapsed time'>
+            <Badge backgroundColor='informational'>{`${seconds}`}</Badge>
+          </Tooltip>
           <Divider orientation='vertical' />
         </div>
         <div className="right-controls">
           <Divider orientation='vertical' />
-          <SplitButton onClick={() => {}} menuItems={buttonMenuItems} styleType='default'>{GameDifficulty[gameDifficulty]}</SplitButton>
+          <Tooltip content='Game difficulty'>
+            <SplitButton onClick={() => {}} menuItems={buttonMenuItems} styleType='default'>{GameDifficulty[gameDifficulty]}</SplitButton>
+          </Tooltip>
           <IconButton onClick={() => {setShowRecord(true);}} label='High Records' size='small'>
             <SvgTrophy/>
           </IconButton>
+          <IconButton onClick={() => {setShowHelp(true);}} label='Help' size='small'>
+            <SvgInfo/>
+          </IconButton>          
         </div>
         {showRecord && (<RecordWindow show={showRecord} difficulty={GameDifficulty[gameDifficulty]} setShow={setShowRecord}/>)}
+        {showHelp && (<HelpWindow show={showHelp} setShow={setShowHelp}/>)}
       </div>
     </div>
   );
@@ -521,7 +536,6 @@ export class Mine3dWidgetProvider implements UiItemsProvider {
   public readonly id: string = "3dMineWidgetProvider";
 
   public provideWidgets(_stageId: string, _stageUsage: string, location: StagePanelLocation, _section?: StagePanelSection): ReadonlyArray<Widget> {
-    console.log("Inside provideWidgets...");
     const widgets: Widget[] = [];
     if (location === StagePanelLocation.Top) {
       widgets.push(

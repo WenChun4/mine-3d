@@ -7,7 +7,6 @@ import { UiFramework } from "@itwin/appui-react";
 import { Cartographic, ColorDef, RenderMode } from "@itwin/core-common";
 import { Range3d, Vector3d } from "@itwin/core-geometry";
 import { BlankConnectionViewState, Viewer, ViewerNavigationToolsProvider } from "@itwin/web-viewer-react";
-//import { authClient } from "./common/AuthorizationClient";
 import { Mine3dWidgetProvider } from "./Mine3dWidget";
 import "./Mine3d.scss";
 import { authContext } from "./common/AuthorizationClient";

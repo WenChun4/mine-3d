@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { Id64String } from "@itwin/core-bentley";
 import { Placement3d, QueryRowFormat, RenderTexture, TextureTransparency } from "@itwin/core-common";
-import { Decorator, imageElementFromUrl, IModelApp, IModelConnection, ScreenViewport, TextureImage, Viewport } from "@itwin/core-frontend";
+import { Decorator, imageElementFromUrl, IModelApp, IModelConnection, ScreenViewport, TextureImage } from "@itwin/core-frontend";
 import { Point3d, Range1d, Range2d, Range3d, Vector3d, XYAndZ } from "@itwin/core-geometry";
 import { EmitterHighlighter, FireDecorator, FireParams } from "./FireDecorator";
 

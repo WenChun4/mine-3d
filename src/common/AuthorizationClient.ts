@@ -42,7 +42,7 @@ class AuthorizationClient extends BrowserAuthorizationClient {
   }
 
   public async getUserFullName():Promise<string> {
-    if(super.isAuthorized == false) {
+    if(super.isAuthorized === false) {
       return "Unknown User";
     }
     

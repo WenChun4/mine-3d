@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { dispose } from "@itwin/core-bentley";
 import { RenderTexture } from "@itwin/core-common";
-import { DecorateContext, Decorator, GraphicBranch, GraphicType, HitDetail, IModelApp, ParticleCollectionBuilder, ParticleProps, RenderGraphic, ScreenViewport, Viewport } from "@itwin/core-frontend";
+import { DecorateContext, Decorator, GraphicBranch, GraphicType, HitDetail, IModelApp, ParticleCollectionBuilder, ParticleProps, RenderGraphic, ScreenViewport } from "@itwin/core-frontend";
 import { Point3d, Range1d, Range2d, Range3d, Transform, Vector3d, XAndY } from "@itwin/core-geometry";
 import FireDecorationApi from "./FireDecorationApi";
 import flameImage from "../imgs/particle-gradient-flame.png";
@@ -386,12 +386,14 @@ export class FireDecorator implements Decorator {
       y: randomFloat(this._params.effectRange.low.y, this._params.effectRange.high.y),
     };
 
+    /*
     if(overrideRange > 0){
-      let xy = {
+      xy = {
         x: randomFloat(-overrideRange, overrideRange),
         y: randomFloat(-overrideRange, overrideRange),
       };
     }
+    */
 
     const isCenterFlame = Math.random() > 0.80;
     if (isCenterFlame) {
