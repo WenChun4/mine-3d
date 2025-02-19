@@ -8,6 +8,7 @@ export interface GameRecord {
     rank: string;
     name: string;
     time: string;
+    date: string;
   }
 
 export default class GameRecordApi {
@@ -23,6 +24,7 @@ export default class GameRecordApi {
           rank: "0",
           name: user,
           time: time.toString(),
+          date: this.formatDateISO(),
       };
 
       if(recordsData === undefined || recordsData.length === 0){
@@ -38,7 +40,6 @@ export default class GameRecordApi {
 
           if(recordsData.length > this.maxRecords)
               recordsData.pop();
-
       }
 
       /*
@@ -88,4 +89,13 @@ export default class GameRecordApi {
             return [];
         });
   }
+
+  private static formatDateISO = () => {
+    const currentDate = new Date();
+    // Convert the date to ISO string
+    const isoString = currentDate.toISOString();
+    // Split at the "T" character to get the date part
+    const formattedDate = isoString.split("T")[0];
+    return formattedDate;
+};
 }

@@ -24,6 +24,7 @@ type RecordWindowProps = {
         { id: 'rank', Header: 'Rank', accessor: 'rank', Cell: RankCell, width: 70 },
         { Header: 'User', accessor: 'name', width: 200 },
         { Header: 'Time (sec)', accessor: 'time', width: 100 },
+        { Header: 'Date', accessor: 'date', width: 120 },
       ]}
       data={datas}
       emptyTableContent="No records."
