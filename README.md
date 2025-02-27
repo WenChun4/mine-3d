@@ -18,9 +18,7 @@ REACT_APP_IMJS_AUTH_CLIENT_SCOPES =""
 
 - Scopes expected by the viewer are:
 
-  - **Visualization**: `imodelaccess:read`
-  - **iModels**: `imodels:read`
-  - **Reality Data**: `realitydata:read`
+  - **itwin**: `itwin-platform`
 
 - The application will use the path of the redirect URI to handle the redirection, it must simply match what is defined in your client.
 
@@ -92,7 +90,3 @@ If you are not using NPM, remove the `USING_NPM` env var from [.env](./.env)
 - [Using the iTwin Platform](https://developer.bentley.com/)
 
 - [iTwin Developer Program](https://www.youtube.com/playlist?list=PL6YCKeNfXXd_dXq4u9vtSFfsP3OTVcL8N)
-
-
-## 2D Mine
-- [Mine Web](https://www.minesweeper.cn)

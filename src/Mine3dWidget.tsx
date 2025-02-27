@@ -4,8 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { StagePanelLocation, StagePanelSection, UiItemsProvider, useActiveViewport, Widget, WidgetState } from "@itwin/appui-react";
-import { ColorByName, ColorDef, TextStringProps } from "@itwin/core-common";
-import { IModelApp } from "@itwin/core-frontend";
+import { ColorByName, ColorDef, Environment, SkyBox, SkyGradient, TextStringProps } from "@itwin/core-common";
+import { IModelApp, ViewState3d } from "@itwin/core-frontend";
 import { LineString3d, Loop, Point3d, PolyfaceBuilder, StrokeOptions, Transform, YawPitchRollAngles } from "@itwin/core-geometry";
 import { Badge, Divider, IconButton, MenuItem, SplitButton, Tooltip, useToaster } from "@itwin/itwinui-react";
 import { GeometryDecorator } from "./common/utils/GeometryDecorator";
@@ -105,6 +105,23 @@ export default function Mine3dWidget() {
       }
     });
   }, [fireDecorator, activeViewport]);  
+
+  // Apply background color changes
+  useEffect(() => {
+    if (activeViewport) {
+      const gradient = SkyGradient.create({
+        zenithColor: ColorDef.from(255, 255, 255),
+        nadirColor: ColorDef.from(150, 150, 150),
+        twoColor: true,
+      });
+  
+      (activeViewport.view as ViewState3d).displayStyle.environment = Environment.create({
+        sky: SkyBox.createGradient(gradient),
+        displaySky: true,
+      });
+    }
+
+  }, [activeViewport]);
 
   useEffect(() => {
     if(gameStatusRef.current === GameStatus.Restart){
